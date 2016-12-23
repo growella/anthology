@@ -1,1 +1,9 @@
+dist
+node_modules
 vendor
+
+# Generated files.
+assets/css/*.css
+*.min.css
+*.min.js
+*.map

@@ -68,16 +68,27 @@ function render_series_ordering( $term ) {
 
 					<?php else : ?>
 
-						<ul class="anthology-series-order-list">
-							<?php while ( $posts->have_posts() ) : $posts->the_post(); ?>
+						<table class="wp-list-table widefat striped anthology-series-order-list">
+							<thead>
+								<tr>
+									<th scope="col"><?php echo esc_html_x( 'Title', 'anthology table heading', 'anthology' ); ?></th>
+									<th scope="col"><?php echo esc_html_x( 'Date', 'anthology table heading', 'anthology' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php while ( $posts->have_posts() ) : $posts->the_post(); ?>
 
-								<li>
-									<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-									<input name="anthology-series-order[]" value="<?php echo esc_attr( get_the_ID() ); ?>" type="hidden" />
-								</li>
+									<tr>
+										<td class="column-title column-primary">
+											<strong><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></strong>
+											<input name="anthology-series-order[]" value="<?php echo esc_attr( get_the_ID() ); ?>" type="hidden" />
+										</td>
+										<td class="column-date"><?php the_date(); ?></td>
+									</tr>
 
-							<?php endwhile; ?>
-						</ul>
+								<?php endwhile; ?>
+							</tbody>
+						</table>
 
 						<?php wp_nonce_field( 'anthology-series-ordering', 'anthology-nonce' ); ?>
 

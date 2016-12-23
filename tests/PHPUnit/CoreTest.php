@@ -17,9 +17,14 @@ class CoreTest extends \Growella\Anthology\TestCase {
 	);
 
 	public function testEnqueueAdminAssets() {
+		M::wpFunction( 'wp_enqueue_style', array(
+			'times' => 1,
+			'args'  => array( 'anthology-admin', '*', '*', ANTHOLOGY_VERSION ),
+		) );
+
 		M::wpFunction( 'wp_enqueue_script', array(
 			'times' => 1,
-			'args'  => array( 'anthology-admin', '*', '*', '*', '*' ),
+			'args'  => array( 'anthology-admin', '*', '*', '*', ANTHOLOGY_VERSION ),
 		) );
 
 		M::wpFunction( 'plugins_url' );

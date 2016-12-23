@@ -1,0 +1,25 @@
+/**
+ * Admin styles for Anthology.
+ *
+ * @package Anthology
+ * @author  Growella
+ */
+
+.anthology-series-order-list {
+	thead {
+		th {
+			padding: 8px;
+		}
+	}
+
+	tbody {
+		tr {
+			cursor: move;
+		}
+	}
+
+	.ui-sortable-helper {
+		background: #fff;
+		border: 1px dashed;
+	}
+}
