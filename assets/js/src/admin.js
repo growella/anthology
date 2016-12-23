@@ -8,7 +8,7 @@
 jQuery( function ( $ ) {
 	'use strict';
 
-	$( '.anthology-series-order-list' ).sortable( {
-
+	$( '.anthology-series-order-list > tbody' ).sortable( {
+		items: 'tr',
 	} );
 } );

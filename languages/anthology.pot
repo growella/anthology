@@ -1,0 +1,103 @@
+# Copyright (C) 2016 Growella
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: Anthology 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/anthology\n"
+"POT-Creation-Date: 2016-12-23 04:36:31+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+
+#: includes/taxonomy.php:34
+msgid "A collection of post in a series"
+msgstr ""
+
+#: includes/taxonomy.php:67
+msgid "No posts have been assigned to this series, so there's nothing to order!"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Anthology"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Automatically cross-link WordPress content in the same series."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Growella"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://growella.com"
+msgstr ""
+
+#: includes/taxonomy.php:16 includes/taxonomy.php:18
+msgctxt "taxonomy label"
+msgid "Series"
+msgstr ""
+
+#: includes/taxonomy.php:19
+msgctxt "taxonomy label"
+msgid "All Series"
+msgstr ""
+
+#: includes/taxonomy.php:20
+msgctxt "taxonomy label"
+msgid "Edit Series"
+msgstr ""
+
+#: includes/taxonomy.php:21
+msgctxt "taxonomy label"
+msgid "View Series"
+msgstr ""
+
+#: includes/taxonomy.php:22
+msgctxt "taxonomy label"
+msgid "Update Series"
+msgstr ""
+
+#: includes/taxonomy.php:23
+msgctxt "taxonomy label"
+msgid "Add New Series"
+msgstr ""
+
+#: includes/taxonomy.php:24
+msgctxt "taxonomy label"
+msgid "New Series Name"
+msgstr ""
+
+#: includes/taxonomy.php:25
+msgctxt "taxonomy label"
+msgid "Search Series"
+msgstr ""
+
+#: includes/taxonomy.php:26
+msgctxt "taxonomy label"
+msgid "Popular Series"
+msgstr ""
+
+#: includes/taxonomy.php:27
+msgctxt "taxonomy label"
+msgid "No series found."
+msgstr ""
+
+#: includes/taxonomy.php:62
+msgctxt "anthology series order"
+msgid "Order"
+msgstr ""
+
+#: includes/taxonomy.php:74
+msgctxt "anthology table heading"
+msgid "Title"
+msgstr ""
+
+#: includes/taxonomy.php:75
+msgctxt "anthology table heading"
+msgid "Date"
+msgstr ""
