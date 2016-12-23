@@ -103,6 +103,7 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		ob_end_clean();
 
 		$this->assertContains( 'name="anthology-series-order[]', $output );
+		$this->assertArrayHasKey( 'tax_query', \WP_Query::$__data );
 
 		\WP_Query::reset();
 	}

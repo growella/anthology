@@ -54,6 +54,13 @@ function render_series_ordering( $term ) {
 		'update_term_meta_cache' => true,
 		'update_post_meta_cache' => false,
 		'no_found_rows'          => true,
+		'tax_query'              => array(
+			array(
+				'taxonomy' => 'anthology-series',
+				'field'    => 'term_id',
+				'terms'    => $term->term_id,
+			),
+		),
 	) );
 	$posts = Core\sort_query_by_series_order( $posts, (array) $order );
 ?>
