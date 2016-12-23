@@ -56,7 +56,7 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 
 	public function testRenderSeriesOrdering() {
 		$term             = new \stdClass;
-		$term->ID         = 123;
+		$term->term_id    = 123;
 		$term->taxonomy   = 'anthology-series';
 		$tax              = new \stdClass;
 		$tax->object_type = array( 'post' );
@@ -87,7 +87,12 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 			'args'   => array( 'anthology-series-ordering', 'anthology-nonce' ),
 		) );
 
+		M::wpFunction( 'the_date' );
 		M::wpFunction( 'wp_reset_postdata' );
+
+		M::wpPassthruFunction( 'Growella\Anthology\Core\sort_query_by_series_order', array(
+			'times'   => 1,
+		) );
 
 		M::wpPassthruFunction( 'esc_attr' );
 		M::wpPassthruFunction( 'esc_html_x' );
@@ -98,16 +103,19 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		ob_end_clean();
 
 		$this->assertContains( 'name="anthology-series-order[]', $output );
+		$this->assertArrayHasKey( 'tax_query', \WP_Query::$__data );
 
-		\WP_Query::$__posts = array();
+		\WP_Query::reset();
 	}
 
 	public function testRenderSeriesOrderingForEmptyTerm() {
 		$term             = new \stdClass;
-		$term->ID         = 123;
+		$term->term_id    = 123;
 		$term->taxonomy   = 'anthology-series';
 		$tax              = new \stdClass;
 		$tax->object_type = array( 'post' );
+
+		\WP_Query::$__posts = array();
 
 		M::wpFunction( 'get_term_meta', array(
 			'return' => array(),
@@ -117,8 +125,10 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 			'return' => $tax,
 		) );
 
+		M::wpFunction( 'the_date' );
 		M::wpFunction( 'wp_reset_postdata' );
 
+		M::wpPassthruFunction( 'Growella\Anthology\Core\sort_query_by_series_order' );
 		M::wpPassthruFunction( 'esc_html_e' );
 		M::wpPassthruFunction( 'esc_html_x' );
 
@@ -128,6 +138,8 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		ob_end_clean();
 
 		$this->assertContains( '<p class="error">', $output );
+
+		\WP_Query::reset();
 	}
 
 	public function testSaveSeriesOrderChecksPostSuperglobalForOrder() {
