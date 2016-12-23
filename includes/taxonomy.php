@@ -8,6 +8,8 @@
 
 namespace Growella\Anthology\Taxonomy;
 
+use Growella\Anthology\Core as Core;
+
 /**
  * Register the 'anthology' taxonomy.
  */
@@ -45,7 +47,7 @@ add_action( 'init', __NAMESPACE__ . '\register_series_taxonomy' );
  */
 function render_series_ordering( $term ) {
 	$tax   = get_taxonomy( $term->taxonomy );
-	$order = get_term_meta( $term->ID, 'anthology-order', true );
+	$order = get_term_meta( $term->term_id, 'anthology-order', true );
 	$posts = new \WP_Query( array(
 		'post_type'              => $tax->object_type,
 		'posts_per_page'         => 100,
@@ -53,6 +55,7 @@ function render_series_ordering( $term ) {
 		'update_post_meta_cache' => false,
 		'no_found_rows'          => true,
 	) );
+	$posts = Core\sort_query_by_series_order( $posts, (array) $order );
 ?>
 
 	<table class="form-table">
