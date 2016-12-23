@@ -15,6 +15,12 @@ class WP_Query {
 		$this->query_vars = $data;
 	}
 
+	// Reset the object at the end of each test.
+	public static function reset() {
+		self::$__data  = null;
+		self::$__posts = null;
+	}
+
 	public function have_posts() {
 		return $this->has_next( $this->posts );
 	}

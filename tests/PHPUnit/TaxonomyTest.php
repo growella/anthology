@@ -104,7 +104,7 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 
 		$this->assertContains( 'name="anthology-series-order[]', $output );
 
-		\WP_Query::$__posts = array();
+		\WP_Query::reset();
 	}
 
 	public function testRenderSeriesOrderingForEmptyTerm() {
@@ -113,6 +113,8 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		$term->taxonomy   = 'anthology-series';
 		$tax              = new \stdClass;
 		$tax->object_type = array( 'post' );
+
+		\WP_Query::$__posts = array();
 
 		M::wpFunction( 'get_term_meta', array(
 			'return' => array(),
@@ -135,6 +137,8 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		ob_end_clean();
 
 		$this->assertContains( '<p class="error">', $output );
+
+		\WP_Query::reset();
 	}
 
 	public function testSaveSeriesOrderChecksPostSuperglobalForOrder() {
