@@ -200,4 +200,47 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 
 		\WP_Query::reset();
 	}
+
+	public function testGetDefaultSeriesForPost() {
+		$terms = array(
+			new \stdClass,
+			new \stdClass,
+		);
+
+		M::wpFunction( 'get_the_terms', array(
+			'times'  => 1,
+			'args'   => array( 123, 'anthology-series' ),
+			'return' => $terms,
+		) );
+
+		M::wpFunction( 'is_wp_error', array(
+			'return' => false,
+		) );
+
+		$this->assertEquals( $terms[0], get_default_series_for_post( 123 ) );
+	}
+
+	public function testGetDefaultSeriesForPostChecksForWPErrors() {
+		M::wpFunction( 'get_the_terms', array(
+			'return' => new \stdClass,
+		) );
+
+		M::wpFunction( 'is_wp_error', array(
+			'return' => true,
+		) );
+
+		$this->assertFalse( get_default_series_for_post( 123 ) );
+	}
+
+	public function testGetDefaultSeriesForPostReturnsFalseIfNoTerms() {
+		M::wpFunction( 'get_the_terms', array(
+			'return' => false,
+		) );
+
+		M::wpFunction( 'is_wp_error', array(
+			'return' => false,
+		) );
+
+		$this->assertFalse( get_default_series_for_post( 123 ) );
+	}
 }

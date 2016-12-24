@@ -151,3 +151,20 @@ function get_series_query( $series, $args = array() ) {
 
 	return Core\sort_query_by_series_order( $query, (array) $order );
 }
+
+/**
+ * Determine the default series to use for the given post.
+ *
+ * @param int $post_id The post ID.
+ * @return WP_Term|boolean Either the WP_Term object representing the first series applied to the
+ *                         given post or a boolean FALSE if there are no series for the post.
+ */
+function get_default_series_for_post( $post_id ) {
+	$terms = get_the_terms( $post_id, 'anthology-series' );
+
+	if ( is_wp_error( $terms ) ) {
+		return false;
+	}
+
+	return is_array( $terms ) && $terms ? array_shift( $terms ) : false;
+}
