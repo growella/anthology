@@ -46,23 +46,7 @@ add_action( 'init', __NAMESPACE__ . '\register_series_taxonomy' );
  * @param WP_Term $term The current term object.
  */
 function render_series_ordering( $term ) {
-	$tax   = get_taxonomy( $term->taxonomy );
-	$order = get_term_meta( $term->term_id, 'anthology-order', true );
-	$posts = new \WP_Query( array(
-		'post_type'              => $tax->object_type,
-		'posts_per_page'         => 100,
-		'update_term_meta_cache' => true,
-		'update_post_meta_cache' => false,
-		'no_found_rows'          => true,
-		'tax_query'              => array(
-			array(
-				'taxonomy' => 'anthology-series',
-				'field'    => 'term_id',
-				'terms'    => $term->term_id,
-			),
-		),
-	) );
-	$posts = Core\sort_query_by_series_order( $posts, (array) $order );
+	$posts = get_series_query( $term->slug );
 ?>
 
 	<table class="form-table">
@@ -131,3 +115,39 @@ function save_series_order( $term_id ) {
 	update_term_meta( $term_id, 'anthology-order', $post_ids );
 }
 add_action( 'edited_anthology-series', __NAMESPACE__ . '\save_series_order' );
+
+/**
+ * Given a series of arguments, construct a WP_Query object for the given series.
+ *
+ * @param string $series The series to construct a query for.
+ * @param array  $args {
+ *   Arguments used to construct the WP_Query object.
+ *
+ *   @type int $limit The maximum number of results to show. Default is 100.
+ * }
+ * @return WP_Query A WP_Query object containing the ordered posts in the given series.
+ */
+function get_series_query( $series, $args = array() ) {
+	$term  = get_term_by( 'slug', $series, 'anthology-series' );
+	$tax   = get_taxonomy( 'anthology-series' );
+	$args  = wp_parse_args( $args, array(
+		'limit' => 100,
+	) );
+	$order = $term ? get_term_meta( $term->term_id, 'anthology-order', true ) : array();
+	$query = new \WP_Query( array(
+		'post_type'              => $tax->object_type,
+		'posts_per_page'         => (int) $args['limit'],
+		'update_term_meta_cache' => true,
+		'update_post_meta_cache' => false,
+		'no_found_rows'          => true,
+		'tax_query'              => array(
+			array(
+				'taxonomy' => 'anthology-series',
+				'field'    => 'term_id',
+				'terms'    => $term->term_id,
+			),
+		),
+	) );
+
+	return Core\sort_query_by_series_order( $query, (array) $order );
+}
