@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the main plugin functionality.
+ * Tests for the taxonomy-specific functionality.
  *
  * @package Growella\Anthology
  * @author  Growella
@@ -55,19 +55,12 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 	}
 
 	public function testRenderSeriesOrdering() {
-		$term             = new \stdClass;
-		$term->term_id    = 123;
-		$term->taxonomy   = 'anthology-series';
-		$tax              = new \stdClass;
-		$tax->object_type = array( 'post' );
+		$term               = new \stdClass;
+		$term->slug         = 'slug';
 		\WP_Query::$__posts = array( 'one', 'two', 'three' );
 
-		M::wpFunction( 'get_term_meta', array(
-			'return' => array( 3, 2, 1 ),
-		) );
-
-		M::wpFunction( 'get_taxonomy', array(
-			'return' => $tax,
+		M::wpFunction( __NAMESPACE__ . '\get_series_query', array(
+			'return' => new \WP_Query(),
 		) );
 
 		M::wpFunction( 'the_title', array(
@@ -90,10 +83,6 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		M::wpFunction( 'the_date' );
 		M::wpFunction( 'wp_reset_postdata' );
 
-		M::wpPassthruFunction( 'Growella\Anthology\Core\sort_query_by_series_order', array(
-			'times'   => 1,
-		) );
-
 		M::wpPassthruFunction( 'esc_attr' );
 		M::wpPassthruFunction( 'esc_html_x' );
 
@@ -103,32 +92,22 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 		ob_end_clean();
 
 		$this->assertContains( 'name="anthology-series-order[]', $output );
-		$this->assertArrayHasKey( 'tax_query', \WP_Query::$__data );
 
 		\WP_Query::reset();
 	}
 
 	public function testRenderSeriesOrderingForEmptyTerm() {
-		$term             = new \stdClass;
-		$term->term_id    = 123;
-		$term->taxonomy   = 'anthology-series';
-		$tax              = new \stdClass;
-		$tax->object_type = array( 'post' );
-
+		$term               = new \stdClass;
+		$term->slug         = 'slug';
 		\WP_Query::$__posts = array();
 
-		M::wpFunction( 'get_term_meta', array(
-			'return' => array(),
-		) );
-
-		M::wpFunction( 'get_taxonomy', array(
-			'return' => $tax,
+		M::wpFunction( __NAMESPACE__ . '\get_series_query', array(
+			'return' => new \WP_Query(),
 		) );
 
 		M::wpFunction( 'the_date' );
 		M::wpFunction( 'wp_reset_postdata' );
 
-		M::wpPassthruFunction( 'Growella\Anthology\Core\sort_query_by_series_order' );
 		M::wpPassthruFunction( 'esc_html_e' );
 		M::wpPassthruFunction( 'esc_html_x' );
 
@@ -186,5 +165,82 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 
 		// Reset $_POST.
 		$_POST = array();
+	}
+
+	public function testGetSeriesQuery() {
+		$term             = new \stdClass;
+		$term->term_id    = 123;
+		$term->taxonomy   = 'anthology-series';
+		$tax              = new \stdClass;
+		$tax->object_type = array( 'post' );
+		\WP_Query::$__posts = array( 'one', 'two', 'three' );
+
+		M::wpFunction( 'get_term_by', array(
+			'args'   => array( 'slug', 'slug', 'anthology-series' ),
+			'return' => $term,
+		) );
+
+		M::wpFunction( 'get_term_meta', array(
+			'return' => array( 3, 2, 1 ),
+		) );
+
+		M::wpFunction( 'get_taxonomy', array(
+			'return' => $tax,
+		) );
+
+		M::wpPassthruFunction( 'wp_parse_args' );
+		M::wpPassthruFunction( 'Growella\Anthology\Core\sort_query_by_series_order', array(
+			'times'   => 1,
+		) );
+
+		$result = get_series_query( 'slug', array( 'limit' => 10 ) );
+
+		$this->assertEquals( \WP_Query::$__instance, $result );
+		$this->assertArrayHasKey( 'tax_query', \WP_Query::$__data );
+
+		\WP_Query::reset();
+	}
+
+	public function testGetDefaultSeriesForPost() {
+		$terms = array(
+			new \stdClass,
+			new \stdClass,
+		);
+
+		M::wpFunction( 'get_the_terms', array(
+			'times'  => 1,
+			'args'   => array( 123, 'anthology-series' ),
+			'return' => $terms,
+		) );
+
+		M::wpFunction( 'is_wp_error', array(
+			'return' => false,
+		) );
+
+		$this->assertEquals( $terms[0], get_default_series_for_post( 123 ) );
+	}
+
+	public function testGetDefaultSeriesForPostChecksForWPErrors() {
+		M::wpFunction( 'get_the_terms', array(
+			'return' => new \stdClass,
+		) );
+
+		M::wpFunction( 'is_wp_error', array(
+			'return' => true,
+		) );
+
+		$this->assertFalse( get_default_series_for_post( 123 ) );
+	}
+
+	public function testGetDefaultSeriesForPostReturnsFalseIfNoTerms() {
+		M::wpFunction( 'get_the_terms', array(
+			'return' => false,
+		) );
+
+		M::wpFunction( 'is_wp_error', array(
+			'return' => false,
+		) );
+
+		$this->assertFalse( get_default_series_for_post( 123 ) );
 	}
 }
