@@ -16,4 +16,5 @@ namespace Growella\Anthology;
 define( 'ANTHOLOGY_VERSION', '0.1.0' );
 
 require_once __DIR__ . '/includes/core.php';
+require_once __DIR__ . '/includes/output.php';
 require_once __DIR__ . '/includes/taxonomy.php';

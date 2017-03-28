@@ -193,7 +193,7 @@ class TaxonomyTest extends \Growella\Anthology\TestCase {
 			'times'   => 1,
 		) );
 
-		$result = get_series_query( 'slug' );
+		$result = get_series_query( 'slug', array( 'limit' => 10 ) );
 
 		$this->assertEquals( \WP_Query::$__instance, $result );
 		$this->assertArrayHasKey( 'tax_query', \WP_Query::$__data );

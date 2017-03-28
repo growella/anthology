@@ -144,7 +144,7 @@ function get_series_query( $series, $args = array() ) {
 			array(
 				'taxonomy' => 'anthology-series',
 				'field'    => 'term_id',
-				'terms'    => $term->term_id,
+				'terms'    => $term ? $term->term_id : 0,
 			),
 		),
 	) );
